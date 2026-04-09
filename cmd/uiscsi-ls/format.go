@@ -11,16 +11,18 @@ import (
 
 // PortalResult holds discovery results for a single iSCSI portal.
 type PortalResult struct {
-	Portal  string         `json:"address"`
-	Targets []TargetResult `json:"targets"`
-	Err     error          `json:"-"`
+	Portal   string         `json:"address"`
+	Targets  []TargetResult `json:"targets"`
+	Err      error          `json:"-"`
+	ErrorStr string         `json:"error,omitempty"`
 }
 
 // TargetResult holds discovery results for a single iSCSI target.
 type TargetResult struct {
-	IQN  string      `json:"iqn"`
-	LUNs []LUNResult `json:"luns"`
-	Err  error       `json:"-"`
+	IQN      string      `json:"iqn"`
+	LUNs     []LUNResult `json:"luns"`
+	Err      error       `json:"-"`
+	ErrorStr string      `json:"error,omitempty"`
 }
 
 // LUNResult holds SCSI inquiry and capacity data for a single LUN.
@@ -88,7 +90,19 @@ func outputColumnar(w io.Writer, results []PortalResult) {
 
 // outputJSON writes machine-parseable JSON output to w with indentation.
 // The top-level object has a "portals" key containing the result array.
+// Errors are included as string fields so JSON consumers can detect failures.
 func outputJSON(w io.Writer, results []PortalResult) {
+	// Populate error strings for JSON serialization.
+	for i := range results {
+		if results[i].Err != nil {
+			results[i].ErrorStr = results[i].Err.Error()
+		}
+		for j := range results[i].Targets {
+			if results[i].Targets[j].Err != nil {
+				results[i].Targets[j].ErrorStr = results[i].Targets[j].Err.Error()
+			}
+		}
+	}
 	wrapper := struct {
 		Portals []PortalResult `json:"portals"`
 	}{

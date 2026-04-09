@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/rkujawa/uiscsi"
+	"github.com/uiscsi/uiscsi"
 )
 
 func TestResolveCHAP(t *testing.T) {

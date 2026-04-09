@@ -28,8 +28,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/rkujawa/uiscsi"
-	tape "github.com/rkujawa/uiscsi-tape"
+	"github.com/uiscsi/uiscsi"
+	tape "github.com/uiscsi/uiscsi-tape"
 )
 
 func main() {

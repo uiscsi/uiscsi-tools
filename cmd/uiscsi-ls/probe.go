@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rkujawa/uiscsi"
+	"github.com/uiscsi/uiscsi"
 )
 
 // discoverFunc is a package-level variable wrapping uiscsi.Discover so tests

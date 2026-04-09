@@ -1,6 +1,6 @@
 # uiscsi-tools
 
-Command-line utilities for iSCSI storage, built on [uiscsi](https://github.com/rkujawa/uiscsi) and [uiscsi-tape](https://github.com/rkujawa/uiscsi-tape).
+Command-line utilities for iSCSI storage, built on [uiscsi](https://github.com/uiscsi/uiscsi) and [uiscsi-tape](https://github.com/uiscsi/uiscsi-tape).
 
 ## Tools
 
@@ -9,7 +9,7 @@ Command-line utilities for iSCSI storage, built on [uiscsi](https://github.com/r
 Discover iSCSI targets and list LUNs in lsscsi-style format.
 
 ```sh
-go install github.com/rkujawa/uiscsi-tools/cmd/uiscsi-ls@latest
+go install github.com/uiscsi/uiscsi-tools/cmd/uiscsi-ls@latest
 
 uiscsi-ls --portal 192.168.1.100
 uiscsi-ls --portal 192.168.1.100 --json
@@ -21,7 +21,7 @@ uiscsi-ls --portal 192.168.1.100 --chap-user admin --chap-secret s3cret
 dd-like tool for streaming data between local files and iSCSI-attached tape drives.
 
 ```sh
-go install github.com/rkujawa/uiscsi-tools/cmd/uiscsi-tape-dd@latest
+go install github.com/uiscsi/uiscsi-tools/cmd/uiscsi-tape-dd@latest
 
 # Write file to tape:
 uiscsi-tape-dd -portal 192.168.1.100:3260 -target iqn.example:tape -if data.bin -bs 524288
@@ -48,5 +48,5 @@ go build ./cmd/uiscsi-tape-dd
 ## Requirements
 
 - Go 1.25 or later
-- [github.com/rkujawa/uiscsi](https://github.com/rkujawa/uiscsi) v1.3.0
-- [github.com/rkujawa/uiscsi-tape](https://github.com/rkujawa/uiscsi-tape) v0.3.0 (for tape tools)
+- [github.com/uiscsi/uiscsi](https://github.com/uiscsi/uiscsi) v1.3.0
+- [github.com/uiscsi/uiscsi-tape](https://github.com/uiscsi/uiscsi-tape) v0.3.0 (for tape tools)

@@ -7,7 +7,7 @@ import (
 	"io"
 	"os"
 
-	tape "github.com/rkujawa/uiscsi-tape"
+	tape "github.com/uiscsi/uiscsi-tape"
 )
 
 type stats struct {
@@ -16,15 +16,22 @@ type stats struct {
 }
 
 // skipRecords reads and discards n records from tape to advance position.
-func skipRecords(ctx context.Context, drive *tape.Drive, n uint64, bufSize int) error {
+// Returns the number of records actually skipped. Stops gracefully at
+// filemark (returns count, nil). Returns an error for other failures.
+func skipRecords(ctx context.Context, drive *tape.Drive, n uint64, bufSize int) (uint64, error) {
 	buf := make([]byte, bufSize)
-	for range n {
+	var skipped uint64
+	for skipped < n {
 		_, err := drive.Read(ctx, buf)
 		if err != nil {
-			return fmt.Errorf("skip: %w", err)
+			if errors.Is(err, tape.ErrFilemark) {
+				return skipped, nil // stopped at filemark
+			}
+			return skipped, fmt.Errorf("skip: %w", err)
 		}
+		skipped++
 	}
-	return nil
+	return skipped, nil
 }
 
 // writeToTape reads data from inputPath and writes it as records to tape.
@@ -33,8 +40,12 @@ func writeToTape(ctx context.Context, drive *tape.Drive, inputPath string, bs ui
 
 	// Seek: advance tape position by reading and discarding records.
 	if seek > 0 {
-		if err := skipRecords(ctx, drive, seek, int(bs)); err != nil {
+		skipped, err := skipRecords(ctx, drive, seek, int(bs))
+		if err != nil {
 			return st, fmt.Errorf("seek: %w", err)
+		}
+		if skipped < seek {
+			fmt.Fprintf(os.Stderr, "warning: seek: hit filemark after %d of %d records\n", skipped, seek)
 		}
 	}
 
@@ -102,8 +113,12 @@ func readFromTape(ctx context.Context, drive *tape.Drive, outputPath string, bs 
 
 	// Skip: advance tape position by reading and discarding records.
 	if skip > 0 {
-		if err := skipRecords(ctx, drive, skip, int(bs)); err != nil {
+		skipped, err := skipRecords(ctx, drive, skip, int(bs))
+		if err != nil {
 			return st, fmt.Errorf("skip: %w", err)
+		}
+		if skipped < skip {
+			fmt.Fprintf(os.Stderr, "warning: skip: hit filemark after %d of %d records\n", skipped, skip)
 		}
 	}
 
@@ -144,11 +159,10 @@ func readFromTape(ctx context.Context, drive *tape.Drive, outputPath string, bs 
 				} else {
 					// Record larger than buffer — DATA TRUNCATED.
 					// The excess is lost; tape position advanced past
-					// the entire record.
-					fmt.Fprintf(os.Stderr, "WARNING: record %d: TRUNCATED (record on tape exceeds %d byte buffer); increase -bs\n",
-						st.records+1, bs)
+					// the entire record. This is unrecoverable data loss.
+					return st, fmt.Errorf("record %d: truncated (record on tape exceeds %d byte buffer); increase -bs", st.records+1, bs)
 				}
-				// Fall through to write whatever data we got.
+				// Fall through to write whatever data we got (short record).
 			} else {
 				return st, fmt.Errorf("read tape: %w", readErr)
 			}

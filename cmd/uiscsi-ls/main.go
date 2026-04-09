@@ -12,9 +12,10 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
-	"github.com/rkujawa/uiscsi"
+	"github.com/uiscsi/uiscsi"
 )
 
 // stringSlice implements flag.Value for a repeatable string flag.
@@ -39,6 +40,12 @@ func main() {
 		fmt.Fprintf(os.Stderr, "error: at least one --portal is required\n\n")
 		fmt.Fprintf(os.Stderr, "Usage: %s --portal <addr> [--portal <addr2>] [--json] [--initiator-name IQN] [--chap-user U] [--chap-secret S]\n", os.Args[0])
 		os.Exit(1)
+	}
+	for _, p := range portals {
+		if !strings.Contains(p, ":") {
+			fmt.Fprintf(os.Stderr, "error: portal %q: expected host:port format (e.g., 192.168.1.100:3260)\n", p)
+			os.Exit(1)
+		}
 	}
 
 	// Resolve CHAP credentials: flags take precedence over env vars.
@@ -67,14 +74,21 @@ func main() {
 
 	// Determine exit code.
 	totalLUNs := 0
+	failedPortals := 0
 	for _, pr := range results {
+		if pr.Err != nil {
+			failedPortals++
+			continue
+		}
 		for _, tr := range pr.Targets {
 			totalLUNs += len(tr.LUNs)
 		}
 	}
+	if failedPortals > 0 && totalLUNs > 0 {
+		fmt.Fprintf(os.Stderr, "warning: %d of %d portals failed\n", failedPortals, len(results))
+	}
 	if totalLUNs > 0 {
 		os.Exit(0)
 	}
-	// All portals failed (or no LUNs found).
 	os.Exit(2)
 }
