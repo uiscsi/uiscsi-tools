@@ -73,7 +73,7 @@ func probeTarget(ctx context.Context, portal string, t uiscsi.Target, opts []uis
 	if err != nil {
 		return TargetResult{IQN: t.Name, Err: fmt.Errorf("dial %s: %w", t.Name, err)}
 	}
-	defer sess.Close()
+	defer func() { _ = sess.Close() }()
 
 	luns, err := sess.ReportLuns(ctx)
 	if err != nil {

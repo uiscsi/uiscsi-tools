@@ -58,7 +58,7 @@ func writeToTape(ctx context.Context, drive *tape.Drive, inputPath string, bs ui
 		if err != nil {
 			return st, err
 		}
-		defer f.Close()
+		defer func() { _ = f.Close() }()
 		input = f
 	}
 
@@ -131,7 +131,7 @@ func readFromTape(ctx context.Context, drive *tape.Drive, outputPath string, bs 
 		if err != nil {
 			return st, err
 		}
-		defer f.Close()
+		defer func() { _ = f.Close() }()
 		output = f
 	}
 

@@ -33,6 +33,10 @@ import (
 )
 
 func main() {
+	os.Exit(run())
+}
+
+func run() int {
 	portal := flag.String("portal", "", "iSCSI target portal address (host:port)")
 	target := flag.String("target", "", "target IQN")
 	lun := flag.Uint64("lun", 0, "LUN number")
@@ -53,13 +57,13 @@ func main() {
 	if *portal == "" || *target == "" {
 		fmt.Fprintf(os.Stderr, "error: -portal and -target are required\n\n")
 		flag.Usage()
-		os.Exit(1)
+		return 1
 	}
 	ifSet := *inputFile != ""
 	ofSet := *outputFile != ""
 	if ifSet == ofSet {
 		fmt.Fprintf(os.Stderr, "error: specify exactly one of -if (write to tape) or -of (read from tape)\n")
-		os.Exit(1)
+		return 1
 	}
 
 	// Logger.
@@ -86,9 +90,9 @@ func main() {
 	sess, err := uiscsi.Dial(ctx, *portal, opts...)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: dial %s: %v\n", *portal, err)
-		os.Exit(2)
+		return 2
 	}
-	defer sess.Close()
+	defer func() { _ = sess.Close() }()
 
 	// Open tape drive.
 	var tapeOpts []tape.Option
@@ -97,7 +101,7 @@ func main() {
 	if *fixed {
 		if *bs == 0 {
 			fmt.Fprintf(os.Stderr, "error: -fixed requires -bs to specify block size\n")
-			os.Exit(1)
+			return 1
 		}
 		tapeOpts = append(tapeOpts, tape.WithBlockSize(uint32(*bs)))
 	}
@@ -108,14 +112,14 @@ func main() {
 	drive, err := tape.Open(ctx, sess, *lun, tapeOpts...)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: open tape LUN %d: %v\n", *lun, err)
-		os.Exit(2)
+		return 2
 	}
-	defer drive.Close(ctx)
+	defer func() { _ = drive.Close(ctx) }()
 	fmt.Fprintf(os.Stderr, "%s %s (rev %s)\n", drive.Info().VendorID, drive.Info().ProductID, drive.Info().Revision)
 
 	if *decompress {
-		if err := drive.SetCompression(ctx, true, true); err != nil {
-			fmt.Fprintf(os.Stderr, "warning: could not enable decompression: %v\n", err)
+		if compErr := drive.SetCompression(ctx, true, true); compErr != nil {
+			fmt.Fprintf(os.Stderr, "warning: could not enable decompression: %v\n", compErr)
 		}
 	}
 
@@ -133,6 +137,7 @@ func main() {
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(2)
+		return 2
 	}
+	return 0
 }

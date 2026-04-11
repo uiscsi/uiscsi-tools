@@ -28,6 +28,10 @@ func (s *stringSlice) Set(v string) error {
 }
 
 func main() {
+	os.Exit(run())
+}
+
+func run() int {
 	var portals stringSlice
 	flag.Var(&portals, "portal", "iSCSI target portal address (repeatable)")
 	initiatorName := flag.String("initiator-name", "", "initiator IQN (default: library-generated)")
@@ -39,12 +43,12 @@ func main() {
 	if len(portals) == 0 {
 		fmt.Fprintf(os.Stderr, "error: at least one --portal is required\n\n")
 		fmt.Fprintf(os.Stderr, "Usage: %s --portal <addr> [--portal <addr2>] [--json] [--initiator-name IQN] [--chap-user U] [--chap-secret S]\n", os.Args[0])
-		os.Exit(1)
+		return 1
 	}
 	for _, p := range portals {
 		if !strings.Contains(p, ":") {
 			fmt.Fprintf(os.Stderr, "error: portal %q: expected host:port format (e.g., 192.168.1.100:3260)\n", p)
-			os.Exit(1)
+			return 1
 		}
 	}
 
@@ -88,7 +92,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "warning: %d of %d portals failed\n", failedPortals, len(results))
 	}
 	if totalLUNs > 0 {
-		os.Exit(0)
+		return 0
 	}
-	os.Exit(2)
+	return 2
 }

@@ -77,7 +77,7 @@ func TestProbePortalError(t *testing.T) {
 	t.Cleanup(func() { discoverFunc = origDiscover })
 
 	// Stub discoverFunc to always return an error.
-	discoverFunc = func(ctx context.Context, addr string, opts ...uiscsi.Option) ([]uiscsi.Target, error) {
+	discoverFunc = func(_ context.Context, addr string, opts ...uiscsi.Option) ([]uiscsi.Target, error) {
 		return nil, fmt.Errorf("connection refused")
 	}
 
@@ -111,7 +111,7 @@ func TestProbeAllWithInitiatorName(t *testing.T) {
 	t.Cleanup(func() { discoverFunc = origDiscover })
 
 	var receivedOpts []uiscsi.Option
-	discoverFunc = func(ctx context.Context, addr string, opts ...uiscsi.Option) ([]uiscsi.Target, error) {
+	discoverFunc = func(_ context.Context, addr string, opts ...uiscsi.Option) ([]uiscsi.Target, error) {
 		receivedOpts = opts
 		return nil, fmt.Errorf("expected failure")
 	}

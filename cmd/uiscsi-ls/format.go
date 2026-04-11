@@ -72,7 +72,7 @@ func outputColumnar(w io.Writer, results []PortalResult) {
 				continue
 			}
 			for _, lr := range tr.LUNs {
-				fmt.Fprintf(tw, "%s\t%s\tLUN %d\t%s\t%-8s\t%-16s\t%-4s\t%s\n",
+				if _, err := fmt.Fprintf(tw, "%s\t%s\tLUN %d\t%s\t%-8s\t%-16s\t%-4s\t%s\n",
 					tr.IQN,
 					pr.Portal,
 					lr.LUN,
@@ -81,11 +81,15 @@ func outputColumnar(w io.Writer, results []PortalResult) {
 					strings.TrimSpace(lr.Product),
 					strings.TrimSpace(lr.Revision),
 					lr.CapacityStr,
-				)
+				); err != nil {
+					fmt.Fprintf(os.Stderr, "error: write output: %v\n", err)
+				}
 			}
 		}
 	}
-	tw.Flush()
+	if err := tw.Flush(); err != nil {
+		fmt.Fprintf(os.Stderr, "error: flush tabwriter: %v\n", err)
+	}
 }
 
 // outputJSON writes machine-parseable JSON output to w with indentation.
@@ -110,5 +114,7 @@ func outputJSON(w io.Writer, results []PortalResult) {
 	}
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
-	enc.Encode(wrapper)
+	if err := enc.Encode(wrapper); err != nil {
+		fmt.Fprintf(os.Stderr, "error: encode JSON: %v\n", err)
+	}
 }
