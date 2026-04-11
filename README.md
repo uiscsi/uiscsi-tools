@@ -48,5 +48,5 @@ go build ./cmd/uiscsi-tape-dd
 ## Requirements
 
 - Go 1.25 or later
-- [github.com/uiscsi/uiscsi](https://github.com/uiscsi/uiscsi) v1.3.0
+- [github.com/uiscsi/uiscsi](https://github.com/uiscsi/uiscsi) v1.3.1
 - [github.com/uiscsi/uiscsi-tape](https://github.com/uiscsi/uiscsi-tape) v0.3.0 (for tape tools)
