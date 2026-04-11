@@ -75,7 +75,7 @@ func probeTarget(ctx context.Context, portal string, t uiscsi.Target, opts []uis
 	}
 	defer func() { _ = sess.Close() }()
 
-	luns, err := sess.ReportLuns(ctx)
+	luns, err := sess.SCSI().ReportLuns(ctx)
 	if err != nil {
 		return TargetResult{IQN: t.Name, Err: fmt.Errorf("report luns %s: %w", t.Name, err)}
 	}
@@ -94,7 +94,7 @@ func probeTarget(ctx context.Context, portal string, t uiscsi.Target, opts []uis
 func probeLUN(ctx context.Context, sess *uiscsi.Session, lun uint64) LUNResult {
 	lr := LUNResult{LUN: uiscsi.DecodeLUN(lun)}
 
-	inq, err := sess.Inquiry(ctx, lun)
+	inq, err := sess.SCSI().Inquiry(ctx, lun)
 	if err != nil {
 		lr.CapacityStr = "-"
 		return lr
@@ -113,7 +113,7 @@ func probeLUN(ctx context.Context, sess *uiscsi.Session, lun uint64) LUNResult {
 		return lr
 	}
 
-	cap, err := sess.ReadCapacity(ctx, lun)
+	cap, err := sess.SCSI().ReadCapacity(ctx, lun)
 	if err != nil {
 		lr.CapacityStr = "-"
 		return lr
