@@ -6,8 +6,8 @@ github.com/stretchr/testify v1.8.0 h1:pSgiaMZlXftHpm5L7V1+rVB+AZJydKsMxsQBIJw4PK
 github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
 github.com/uiscsi/uiscsi v1.4.0 h1:zjwGuC64lWIo4GY+qgNvl9pUSlJRLfhPnJM4bY1bz3c=
 github.com/uiscsi/uiscsi v1.4.0/go.mod h1:dHHfId8JIxqtlhinYGt+j6yCEYb9nNT/QKjGGHI8cDQ=
-github.com/uiscsi/uiscsi-tape v0.3.1 h1:Rb0e4OamD1vWa9C33g5ncr88OQmkQ+Ts4EcsIJsgLfs=
-github.com/uiscsi/uiscsi-tape v0.3.1/go.mod h1:TywRHSSbw0Zjgb/X7EIh1mB6dVjopW89LIWnPLs577s=
+github.com/uiscsi/uiscsi-tape v0.4.0 h1:GJS8puCIwFvYB5Hc0pg8lHXbY1ENetHf5eRNWCHYJJU=
+github.com/uiscsi/uiscsi-tape v0.4.0/go.mod h1:91o8+RjlEXNaJN7U9DatLzdO6TwzNkrT5zhy5zO1zLg=
 go.uber.org/goleak v1.3.0 h1:2K3zAYmnTNqV73imy9J1T3WC+gmCePx2hEGkimedGto=
 go.uber.org/goleak v1.3.0/go.mod h1:CoHD4mav9JJNrW/WLlf7HGZPjdw8EucARQHekz1X6bE=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
