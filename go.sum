@@ -4,10 +4,12 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.8.0 h1:pSgiaMZlXftHpm5L7V1+rVB+AZJydKsMxsQBIJw4PKk=
 github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
-github.com/uiscsi/uiscsi v1.4.0 h1:zjwGuC64lWIo4GY+qgNvl9pUSlJRLfhPnJM4bY1bz3c=
-github.com/uiscsi/uiscsi v1.4.0/go.mod h1:dHHfId8JIxqtlhinYGt+j6yCEYb9nNT/QKjGGHI8cDQ=
-github.com/uiscsi/uiscsi-tape v0.4.0 h1:GJS8puCIwFvYB5Hc0pg8lHXbY1ENetHf5eRNWCHYJJU=
-github.com/uiscsi/uiscsi-tape v0.4.0/go.mod h1:91o8+RjlEXNaJN7U9DatLzdO6TwzNkrT5zhy5zO1zLg=
+github.com/uiscsi/tapesim v0.2.1 h1:BNXg3kny13d1FJvkR0IcOZcXRKwrQXjrUvCE4/cS+X8=
+github.com/uiscsi/tapesim v0.2.1/go.mod h1:9YdKxLPMIX+D6ZkkQjK3r2Zi6io/ON9Ku5zLmnStDNU=
+github.com/uiscsi/uiscsi v1.4.1 h1:suRCX0HW+fScMRlpcQSd+Bd4qPQdSOEhEZxPopHPldA=
+github.com/uiscsi/uiscsi v1.4.1/go.mod h1:dHHfId8JIxqtlhinYGt+j6yCEYb9nNT/QKjGGHI8cDQ=
+github.com/uiscsi/uiscsi-tape v0.4.3 h1:xY+YU1bq9DzDsFvObgs3J10OkEiHEbVxRKrVY1A4oW4=
+github.com/uiscsi/uiscsi-tape v0.4.3/go.mod h1:OheqLk1FEgdyXatRAc5L6g6qXGDHUjY9kFxJULHsO3w=
 go.uber.org/goleak v1.3.0 h1:2K3zAYmnTNqV73imy9J1T3WC+gmCePx2hEGkimedGto=
 go.uber.org/goleak v1.3.0/go.mod h1:CoHD4mav9JJNrW/WLlf7HGZPjdw8EucARQHekz1X6bE=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
